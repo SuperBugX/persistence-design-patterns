@@ -3,9 +3,10 @@ package com.asdt.domain;
 import com.asdt.persistence.OID;
 import com.asdt.persistence.PersistenceFacade;
 
-public class ManufacturerProxy implements IManufacturer {
+public class ManufacturerProxy extends Manufacturer {
     // VIRTUAL PROXY pattern
-    private IManufacturer realSubject = null;
+	
+	//Removed manufacturer object to avoid delegation, The ManufacturerProxy class IS a manufacturer
 
     private OID realSubjectOID;
 
@@ -13,17 +14,30 @@ public class ManufacturerProxy implements IManufacturer {
         realSubjectOID = oid;
     }
 
-    private IManufacturer getRealSubject() {
-        if (realSubject == null)
-            realSubject = (IManufacturer) PersistenceFacade.getInstance().get(realSubjectOID, Manufacturer.class);
-        return realSubject;
+    private void getRealSubject() {
+    	//Get the full original Manufacturer Object
+    	Manufacturer realSubject = (Manufacturer) PersistenceFacade.getInstance().get(realSubjectOID, Manufacturer.class);
+    	
+    	//Set ALL of the variables of the Proxy Class using the new Object
+    	//By using setAddress I am using the (parent) manufacturers original method implementation
+    	this.setAddress(realSubject.getAddress());
     }
 
+    //Override getAddress to accomplish Proxy functionality
+    @Override
     public String getAddress() {
-        return getRealSubject().getAddress();
+    	//Use the parent getAddress class, exploiting inheritance and reusing code
+    	String address = super.getAddress();
+    	if(address == null) {
+    		//Get real manufacturer
+    		this.getRealSubject();
+    		//Get the address again using the manufacturers getAddress method
+    		address = super.getAddress();
+    	}
+        return address;
     }
 
     public String toString() {
-        return "ManufacturerProxy: OID: [" + realSubjectOID + "] realSubject: [" + realSubject + "]";
+        return "ManufacturerProxy: OID: [" + realSubjectOID + "] Manufacturer: Address: [" + this.getAddress() + "]";
     }    
 }

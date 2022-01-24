@@ -2,7 +2,7 @@ package com.asdt.domain;
 
 import com.asdt.persistence.PersistentObject;
 
-public class Manufacturer extends PersistentObject implements IManufacturer {
+public class Manufacturer extends PersistentObject{
     private String address;
 
     public void setAddress(String a) {

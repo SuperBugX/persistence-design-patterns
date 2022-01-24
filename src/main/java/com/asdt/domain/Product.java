@@ -7,7 +7,7 @@ public class Product extends PersistentObject {
     private int price;
 
     // VIRTUAL PROXY object
-    private IManufacturer manufacturer;
+    private Manufacturer manufacturer;
 
     public void setDescription(String d) {
         description = d;
@@ -33,7 +33,7 @@ public class Product extends PersistentObject {
         return manufacturer.getAddress();
     }
 
-    public void setManufacturer(IManufacturer im) {
+    public void setManufacturer(Manufacturer im) {
         manufacturer = im;
     }
 
